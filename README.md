@@ -18,6 +18,14 @@ This repository contains a console application and a WebAPI project to demonstra
 5. Build and run the WebAPI project.
 6. Observe the API response showing a different number of registered helpers.
 
+### Expected Behavior
+Both projects should register the same number of helpers:
+- 134 Block Helpers and 265 Helpers
+
+### Actual Behavior
+- Console Application: 134 Block Helpers and 265 Helpers
+- WebAPI Project: 97 Block Helpers and 193 Helpers
+
 ## Environment
 
 - .NET Version: 8.0
