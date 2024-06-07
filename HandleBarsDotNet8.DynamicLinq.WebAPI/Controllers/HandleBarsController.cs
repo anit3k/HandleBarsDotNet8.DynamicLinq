@@ -1,6 +1,8 @@
 ﻿using HandlebarsDotNet.Helpers;
 using HandlebarsDotNet;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel;
+using System.Diagnostics;
 
 namespace HandleBarsDotNet8.DynamicLinq.WebAPI.Controllers
 {
@@ -44,7 +46,15 @@ namespace HandleBarsDotNet8.DynamicLinq.WebAPI.Controllers
             // Register Handlebars.Net.Helpers
             var handlebars = Handlebars.Create();
             handlebars.Configuration.NoEscape = true;
-            HandlebarsHelpers.Register(handlebars);
+            // Original helper registration
+            //HandlebarsHelpers.Register(handlebars);
+
+            // Workaround provide by https://github.com/StefH
+            // Currently works in debug mode
+            HandlebarsHelpers.Register(handlebars, c => c.CustomHelperPaths = new BindingList<string>
+                {
+                    Path.GetDirectoryName(Process.GetCurrentProcess().MainModule!.FileName)!
+                });
 
             var result = string.Empty;
 
@@ -56,7 +66,7 @@ namespace HandleBarsDotNet8.DynamicLinq.WebAPI.Controllers
             {
                 string template = "{\"ItemName\":\"{{ Name }}\",\"ItemDescription\":\"{{ Description }}\",\"Locations\": [{{#each (DynamicLinq.Where Locations \"Warehouse != null && Warehouse != String.Empty && Quantity > 0\")}}{\"Location\":\"{{ Warehouse }}\",\"Quantity\":\"{{ Quantity }}\" }{{#unless @last}},{{/unless}}{{/each}}]}";
                 var compiledTemplate = handlebars.Compile(template);
-                result = compiledTemplate(item);
+                result += compiledTemplate(item);
                 Console.WriteLine("OUTPUT: " + result);
             }
             catch (Exception ex)
