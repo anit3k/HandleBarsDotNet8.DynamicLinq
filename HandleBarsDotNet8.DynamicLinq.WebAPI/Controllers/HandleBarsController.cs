@@ -47,14 +47,14 @@ namespace HandleBarsDotNet8.DynamicLinq.WebAPI.Controllers
             var handlebars = Handlebars.Create();
             handlebars.Configuration.NoEscape = true;
             // Original helper registration
-            //HandlebarsHelpers.Register(handlebars);
+            HandlebarsHelpers.Register(handlebars);
 
             // Workaround provide by https://github.com/StefH
             // Currently works in debug mode
-            HandlebarsHelpers.Register(handlebars, c => c.CustomHelperPaths = new BindingList<string>
-                {
-                    Path.GetDirectoryName(Process.GetCurrentProcess().MainModule!.FileName)!
-                });
+            //HandlebarsHelpers.Register(handlebars, c => c.CustomHelperPaths = new BindingList<string>
+            //    {
+            //        Path.GetDirectoryName(Process.GetCurrentProcess().MainModule!.FileName)!
+            //    });
 
             var result = string.Empty;
 
